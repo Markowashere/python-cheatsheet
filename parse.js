@@ -86,12 +86,12 @@ const DATACLASS =
   '&lt;tuple&gt; = (<span class="hljs-string">\'&lt;attr_name&gt;\'</span>, &lt;type&gt; [, &lt;default_value&gt;])';
 
 const SHUTIL_COPY =
-  'shutil.copy(from, to)            <span class="hljs-comment"># Copies the file. \'to\' can exist or be a dir.</span>\n' +
-  'shutil.copytree(from, to)        <span class="hljs-comment"># Copies the directory. \'to\' must not exist.</span>\n';
+  'shutil.copy(from, to)               <span class="hljs-comment"># Copies the file. \'to\' can exist or be a dir.</span>\n' +
+  'shutil.copytree(from, to)           <span class="hljs-comment"># Copies the directory. \'to\' must not exist.</span>\n';
 
 const OS_RENAME =
-  'os.rename(from, to)              <span class="hljs-comment"># Renames/moves the file or directory.</span>\n' +
-  'os.replace(from, to)             <span class="hljs-comment"># Same, but overwrites \'to\' if it exists.</span>\n';
+  'os.rename(from, to)                 <span class="hljs-comment"># Renames/moves the file or directory.</span>\n' +
+  'os.replace(from, to)                <span class="hljs-comment"># Same, but overwrites \'to\' if it exists.</span>\n';
 
 const STRUCT_FORMAT =
   '<span class="hljs-section">\'&lt;n&gt;s\'</span><span class="hljs-attribute"></span>';
@@ -119,11 +119,12 @@ const COROUTINES =
   '    asyncio.run(main_coroutine(screen))        <span class="hljs-comment"># Starts running asyncio code.</span>\n' +
   '\n' +
   '<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">main_coroutine</span><span class="hljs-params">(screen)</span>:</span>\n' +
-  '    state = {<span class="hljs-string">\'*\'</span>: P(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>), **{id_: P(W//<span class="hljs-number">2</span>, H//<span class="hljs-number">2</span>) <span class="hljs-keyword">for</span> id_ <span class="hljs-keyword">in</span> range(<span class="hljs-number">10</span>)}}\n' +
   '    moves = asyncio.Queue()\n' +
-  '    coros = (*(random_controller(id_, moves) <span class="hljs-keyword">for</span> id_ <span class="hljs-keyword">in</span> range(<span class="hljs-number">10</span>)),\n' +
-  '             human_controller(screen, moves), model(moves, state), view(state, screen))\n' +
-  '    <span class="hljs-keyword">await</span> asyncio.wait(coros, return_when=asyncio.FIRST_COMPLETED)\n' +
+  '    state = {<span class="hljs-string">\'*\'</span>: P(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>), **{id_: P(W//<span class="hljs-number">2</span>, H//<span class="hljs-number">2</span>) <span class="hljs-keyword">for</span> id_ <span class="hljs-keyword">in</span> range(<span class="hljs-number">10</span>)}}\n' +
+  '    ai    = [random_controller(id_, moves) <span class="hljs-keyword">for</span> id_ <span class="hljs-keyword">in</span> range(<span class="hljs-number">10</span>)]\n' +
+  '    mvc   = [human_controller(screen, moves), model(moves, state), view(state, screen)]\n' +
+  '    tasks = [asyncio.create_task(cor) <span class="hljs-keyword">for</span> cor <span class="hljs-keyword">in</span> ai + mvc]\n' +
+  '    <span class="hljs-keyword">await</span> asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)\n' +
   '\n' +
   '<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">random_controller</span><span class="hljs-params">(id_, moves)</span>:</span>\n' +
   '    <span class="hljs-keyword">while</span> <span class="hljs-keyword">True</span>:\n' +
@@ -261,13 +262,13 @@ const DIAGRAM_1_A =
   '+------------------+------------+------------+------------+\n';
 
 const DIAGRAM_1_B =
-'┏━━━━━━━━━━━━━━━━━━┯━━━━━━━━━━━━┯━━━━━━━━━━━━┯━━━━━━━━━━━━┓\n' +
-'┃                  │  Iterable  │ Collection │  Sequence  ┃\n' +
-'┠──────────────────┼────────────┼────────────┼────────────┨\n' +
-'┃ list, range, str │     ✓      │     ✓      │     ✓      ┃\n' +
-'┃ dict, set        │     ✓      │     ✓      │            ┃\n' +
-'┃ iter             │     ✓      │            │            ┃\n' +
-'┗━━━━━━━━━━━━━━━━━━┷━━━━━━━━━━━━┷━━━━━━━━━━━━┷━━━━━━━━━━━━┛\n';
+  '┏━━━━━━━━━━━━━━━━━━┯━━━━━━━━━━━━┯━━━━━━━━━━━━┯━━━━━━━━━━━━┓\n' +
+  '┃                  │  Iterable  │ Collection │  Sequence  ┃\n' +
+  '┠──────────────────┼────────────┼────────────┼────────────┨\n' +
+  '┃ list, range, str │     ✓      │     ✓      │     ✓      ┃\n' +
+  '┃ dict, set        │     ✓      │     ✓      │            ┃\n' +
+  '┃ iter             │     ✓      │            │            ┃\n' +
+  '┗━━━━━━━━━━━━━━━━━━┷━━━━━━━━━━━━┷━━━━━━━━━━━━┷━━━━━━━━━━━━┛\n';
 
 const DIAGRAM_2_A =
   '+--------------------+----------+----------+----------+----------+----------+\n' +
@@ -413,6 +414,21 @@ const DIAGRAM_9_B =
   "┃ escapechar       │      None    │      None    │      None    ┃\n" +
   "┗━━━━━━━━━━━━━━━━━━┷━━━━━━━━━━━━━━┷━━━━━━━━━━━━━━┷━━━━━━━━━━━━━━┛\n";
 
+const DIAGRAM_95_A =
+  "+------------+--------------+-----------+-----------------------------------+\n" +
+  "| Dialects   | pip3 install | import    | Dependencies                      |\n" +
+  "+------------+--------------+-----------+-----------------------------------+\n";
+
+const DIAGRAM_95_B =
+  "┏━━━━━━━━━━━━┯━━━━━━━━━━━━━━┯━━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n" +
+  "┃ Dialects   │ pip3 install │ import    │ Dependencies                      ┃\n" +
+  "┠────────────┼──────────────┼───────────┼───────────────────────────────────┨\n" +
+  "┃ mysql      │ mysqlclient  │ MySQLdb   │ www.pypi.org/project/mysqlclient  ┃\n" +
+  "┃ postgresql │ psycopg2     │ psycopg2  │ www.psycopg.org/docs/install.html ┃\n" +
+  "┃ mssql      │ pyodbc       │ pyodbc    │ apt install g++ unixodbc-dev      ┃\n" +
+  "┃ oracle     │ cx_oracle    │ cx_Oracle │ Oracle Instant Client             ┃\n" +
+  "┗━━━━━━━━━━━━┷━━━━━━━━━━━━━━┷━━━━━━━━━━━┷━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n";
+
 const DIAGRAM_10_A =
   '+-------------+-------------+\n' +
   '|   Classes   | Metaclasses |\n' +
@@ -448,19 +464,18 @@ const DIAGRAM_11_B =
   '┗━━━━━━━━━━━━━┷━━━━━━━━━━━━━┛\n';
 
 const DIAGRAM_12_A =
-  '+-----------+-------------+------+-------------+\n' +
-  '| sampwidth |     min     | zero |     max     |\n' +
-  '+-----------+-------------+------+-------------+\n';
+  '+-----------+-----------+------+-----------+\n' +
+  '| sampwidth |    min    | zero |    max    |\n' +
+  '+-----------+-----------+------+-----------+\n';
 
 const DIAGRAM_12_B =
-  '┏━━━━━━━━━━━┯━━━━━━━━━━━━━┯━━━━━━┯━━━━━━━━━━━━━┓\n' +
-  '┃ sampwidth │     min     │ zero │     max     ┃\n' +
-  '┠───────────┼─────────────┼──────┼─────────────┨\n' +
-  '┃     1     │           0 │  128 │         255 ┃\n' +
-  '┃     2     │      -32768 │    0 │       32767 ┃\n' +
-  '┃     3     │    -8388608 │    0 │     8388607 ┃\n' +
-  '┃     4     │ -2147483648 │    0 │  2147483647 ┃\n' +
-  '┗━━━━━━━━━━━┷━━━━━━━━━━━━━┷━━━━━━┷━━━━━━━━━━━━━┛\n';
+  '┏━━━━━━━━━━━┯━━━━━━━━━━━┯━━━━━━┯━━━━━━━━━━━┓\n' +
+  '┃ sampwidth │    min    │ zero │    max    ┃\n' +
+  '┠───────────┼───────────┼──────┼───────────┨\n' +
+  '┃     1     │         0 │  128 │       255 ┃\n' +
+  '┃     2     │    -32768 │    0 │     32767 ┃\n' +
+  '┃     3     │  -8388608 │    0 │   8388607 ┃\n' +
+  '┗━━━━━━━━━━━┷━━━━━━━━━━━┷━━━━━━┷━━━━━━━━━━━┛\n';
 
 const DIAGRAM_13_A =
   '| sr.apply(…)     |      3      |    sum  3   |     s  3      |';
@@ -498,18 +513,18 @@ const DIAGRAM_15_B =
   "┠────────────────────────┼───────────────┼────────────┼────────────┼──────────────────────────┨\n" +
   "┃ l.join(r, lsuffix='l', │    x yl yr  z │            │ x yl yr  z │ Joins/merges on row keys.┃\n" +
   "┃           rsuffix='r', │ a  1  2  .  . │ x yl yr  z │ 1  2  .  . │ Uses 'left' by default.  ┃\n" +
-  "┃           how=…)       │ b  3  4  4  5 │ 3  4  4  5 │ 3  4  4  5 │ If r is a series, it is  ┃\n" +
+  "┃           how=…)       │ b  3  4  4  5 │ 3  4  4  5 │ 3  4  4  5 │ If r is a Series, it is  ┃\n" +
   "┃                        │ c  .  .  6  7 │            │            │ treated as a column.     ┃\n" +
   "┠────────────────────────┼───────────────┼────────────┼────────────┼──────────────────────────┨\n" +
   "┃ pd.concat([l, r],      │    x   y   z  │     y      │            │ Adds rows at the bottom. ┃\n" +
   "┃           axis=0,      │ a  1   2   .  │     2      │            │ Uses 'outer' by default. ┃\n" +
-  "┃           join=…)      │ b  3   4   .  │     4      │            │ A series is treated as a ┃\n" +
+  "┃           join=…)      │ b  3   4   .  │     4      │            │ A Series is treated as a ┃\n" +
   "┃                        │ b  .   4   5  │     4      │            │ column. Use l.append(sr) ┃\n" +
   "┃                        │ c  .   6   7  │     6      │            │ to add a row instead.    ┃\n" +
   "┠────────────────────────┼───────────────┼────────────┼────────────┼──────────────────────────┨\n" +
   "┃ pd.concat([l, r],      │    x  y  y  z │            │            │ Adds columns at the      ┃\n" +
   "┃           axis=1,      │ a  1  2  .  . │ x  y  y  z │            │ right end. Uses 'outer'  ┃\n" +
-  "┃           join=…)      │ b  3  4  4  5 │ 3  4  4  5 │            │ by default. A series is  ┃\n" +
+  "┃           join=…)      │ b  3  4  4  5 │ 3  4  4  5 │            │ by default. A Series is  ┃\n" +
   "┃                        │ c  .  .  6  7 │            │            │ treated as a column.     ┃\n" +
   "┠────────────────────────┼───────────────┼────────────┼────────────┼──────────────────────────┨\n" +
   "┃ l.combine_first(r)     │    x   y   z  │            │            │ Adds missing rows and    ┃\n" +
@@ -677,6 +692,7 @@ function updateDiagrams() {
   $(`code:contains(${DIAGRAM_7_A})`).html(DIAGRAM_7_B);
   $(`code:contains(${DIAGRAM_8_A})`).html(DIAGRAM_8_B);
   $(`code:contains(${DIAGRAM_9_A})`).html(DIAGRAM_9_B);
+  $(`code:contains(${DIAGRAM_95_A})`).html(DIAGRAM_95_B);
   $(`code:contains(${DIAGRAM_10_A})`).html(DIAGRAM_10_B);
   $(`code:contains(${DIAGRAM_11_A})`).html(DIAGRAM_11_B);
   $(`code:contains(${DIAGRAM_12_A})`).html(DIAGRAM_12_B).removeClass("text").removeClass("language-text").addClass("python");
